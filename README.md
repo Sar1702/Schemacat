@@ -1,4 +1,7 @@
-https://drive.google.com/drive/u/0/home
+https://drive.google.com/file/d/1apLb001ml6wPNgfLfRlmUA_zQX_HOjfT/view?usp=drive_open&t=60
+
+
+
 🐱 SchemaCat
 
 SchemaCat is a chat-based developer assistant that helps users write, understand, and optimize MongoDB queries and schemas using a pretrained Large Language Model (LLM) grounded in real database context.
