@@ -254,7 +254,7 @@ Create `.env` file for environment-specific config:
 
 ```env
 VITE_API_URL=http://localhost:3000
-VITE_APP_NAME=QueryPilot
+VITE_APP_NAME=SchemaCat
 ```
 
 Access in code:

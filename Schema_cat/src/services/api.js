@@ -54,11 +54,11 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ email, password, name }),
     });
-    
+
     if (data.data?.token) {
       this.setToken(data.data.token);
     }
-    
+
     return data;
   }
 
@@ -67,11 +67,11 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    
+
     if (data.data?.token) {
       this.setToken(data.data.token);
     }
-    
+
     return data;
   }
 
@@ -101,6 +101,10 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ message, collectionName }),
     });
+  }
+
+  async getChatHistory() {
+    return this.request('/chat/history');
   }
 
   // Health check

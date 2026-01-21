@@ -13,6 +13,7 @@ const Chat = () => {
 
   useEffect(() => {
     loadSchema();
+    loadChatHistory();
   }, []);
 
   const loadSchema = async () => {
@@ -21,6 +22,25 @@ const Chat = () => {
       setSchema(response.data);
     } catch (err) {
       console.error('Failed to load schema:', err);
+    }
+  };
+
+  const loadChatHistory = async () => {
+    try {
+      const response = await api.getChatHistory();
+      if (response.data && response.data.messages) {
+        // Convert backend message format to frontend format
+        const formattedMessages = response.data.messages.map((msg, index) => ({
+          id: Date.now() + index,
+          isUser: msg.role === 'user',
+          text: msg.content,
+          schemaContext: msg.schemaContext,
+          note: msg.role === 'assistant' ? 'Response generated using OpenAI GPT-4o-mini' : null
+        }));
+        setMessages(formattedMessages);
+      }
+    } catch (err) {
+      console.error('Failed to load chat history:', err);
     }
   };
 
@@ -40,7 +60,7 @@ const Chat = () => {
 
     try {
       const response = await api.sendMessage(inputValue);
-      
+
       const aiMessage = {
         id: Date.now() + 1,
         isUser: false,

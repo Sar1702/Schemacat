@@ -49,7 +49,7 @@ const Login = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Sign In to QueryPilot
+            Sign In to SchemaCat
           </h1>
         </div>
 

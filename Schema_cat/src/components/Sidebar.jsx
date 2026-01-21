@@ -28,7 +28,7 @@ const Sidebar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
             </svg>
           </div>
-          <span className="text-xl font-bold text-gray-900 dark:text-white">QueryPilot</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">SchemaCat</span>
         </div>
       </div>
 
@@ -39,11 +39,10 @@ const Sidebar = () => {
             <li key={item.path}>
               <Link
                 to={item.path}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${
-                  location.pathname === item.path
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors duration-200 ${location.pathname === item.path
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                }`}
+                  }`}
               >
                 <span className="text-xl">{item.icon}</span>
                 <span className="font-medium">{item.name}</span>

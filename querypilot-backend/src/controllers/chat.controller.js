@@ -1,90 +1,108 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import * as schemaService from '../services/schema.service.js';
+import * as chatHistoryService from '../services/chatHistory.service.js';
 import logger from '../utils/logger.js';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 
 export const chat = asyncHandler(async (req, res) => {
   const { message, collectionName } = req.body;
   const userId = req.user.id;
-  
+
   logger.info(`Chat request from user ${userId}: ${message.substring(0, 50)}...`);
-  
+
   const schemaContext = await schemaService.getSchemaContext(userId);
-  
+
   // System prompt for SchemaCat
-  const systemPrompt = `You are SchemaCat, a MongoDB-focused developer assistant.
+  const systemPrompt = `You are SchemaCat, a friendly MongoDB assistant that helps users work with their database.
 
-Your role is to help developers write, understand, and optimize MongoDB queries and schemas using real database context.
+Your role is to help users write and understand MongoDB queries using their actual database structure.
 
-You are NOT a general-purpose chatbot.
-You ONLY assist with MongoDB-related tasks, including:
-- Writing MongoDB queries and aggregation pipelines
-- Explaining existing queries in simple terms
-- Suggesting indexes and query optimizations
-- Providing schema design advice
-- Identifying potential performance issues
+You ONLY help with MongoDB-related tasks:
+- Writing database queries
+- Explaining what queries do in simple terms
+- Suggesting better ways to organize or query data
 
-You will be provided with MongoDB database context, such as:
-- Collection names
-- Sample document structures
-- Field names and data types
-- Existing indexes
+IMPORTANT RULES FOR YOUR RESPONSES:
 
-You MUST strictly follow this context.
-Do NOT assume or invent collections, fields, or indexes.
-If a requested field or collection does not exist, clearly state that and explain the limitation.
+1. **Always start with the MongoDB query code** in a code block
+2. **Explain in SIMPLE language** - imagine you're talking to someone who just learned about databases
+3. **Use everyday analogies** - compare database operations to real-world actions (like searching through a filing cabinet, counting items in a box, etc.)
+4. **Avoid technical jargon** - don't use terms like "documents", "collections", "indexes" without explaining them in plain English first
+5. **Be conversational and friendly** - use "you" and "your data" instead of formal language
+6. **Keep it short** - 2-3 sentences max for explanations
 
-Response rules:
-1. If the user asks for a query, first output a valid MongoDB query.
-2. Then explain what the query does in clear, developer-friendly language.
-3. Then provide optimization or schema suggestions if applicable.
-4. Use valid MongoDB syntax only.
-5. Keep responses concise, accurate, and practical.
+EXAMPLE OF GOOD RESPONSE:
+\`\`\`javascript
+db.students.find({})
+\`\`\`
+This gets all the students from your database - like opening a folder and pulling out every student record you have.
 
-If the request is unclear, ask a clarification question before generating a query.
-If the request is outside MongoDB scope, politely refuse and redirect to MongoDB-related help only.
+EXAMPLE OF BAD RESPONSE (too technical):
+This query retrieves all documents from the students collection. The find() method with an empty object parameter returns all documents without filtering criteria.
 
-Your tone should be professional, precise, and focused on developer productivity.`;
-  
+You will be given information about the user's database structure. ONLY use collections and fields that actually exist - never make up or assume data that isn't there.
+
+If someone asks for something outside MongoDB or database work, politely say you only help with database queries.`;
+
   // Build context for AI
-  const contextMessage = `${systemPrompt}
-
-DATABASE SCHEMA CONTEXT:
+  const userPrompt = `DATABASE SCHEMA CONTEXT:
 ${schemaContext}
 
 USER QUESTION: ${message}
 
 Provide your response as SchemaCat:`;
-  
+
   try {
-    // Call Google Gemini API
-    const geminiApiKey = process.env.GEMINI_API_KEY;
-    if (!geminiApiKey) {
-      throw new Error('Gemini API key not configured');
+    // Call OpenAI API
+    const openaiApiKey = process.env.OPENAI_API_KEY;
+    if (!openaiApiKey) {
+      throw new Error('OpenAI API key not configured');
     }
 
-    const genAI = new GoogleGenerativeAI(geminiApiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    const openai = new OpenAI({
+      apiKey: openaiApiKey,
+    });
 
-    const result = await model.generateContent(contextMessage);
-    const response = await result.response;
-    const aiResponse = response.text();
-    
+    logger.info('Calling OpenAI GPT-4o-mini model');
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
+
+    const aiResponse = completion.choices[0].message.content;
+
+    // Save user message to chat history
+    await chatHistoryService.saveChatMessage(userId, 'user', message, schemaContext);
+
+    // Save AI response to chat history
+    await chatHistoryService.saveChatMessage(userId, 'assistant', aiResponse.trim());
+
+    // Get full chat history to return
+    const chatHistory = await chatHistoryService.getChatHistory(userId);
+
     const responseData = {
       receivedMessage: message,
       collectionContext: collectionName || null,
       schemaContext: schemaContext,
-      aiResponse: aiResponse,
-      note: 'Response generated using Google Gemini 1.5 Flash',
+      aiResponse: aiResponse.trim(),
+      chatHistory: chatHistory, // Include full chat history
+      note: 'Response generated using OpenAI GPT-4o-mini',
     };
-    
+
     res.status(200).json({
       success: true,
       data: responseData,
     });
+
   } catch (error) {
     logger.error(`Chat error: ${error.message}`);
-    
+
     // Fallback response if AI fails
     const response = {
       receivedMessage: message,
@@ -93,7 +111,7 @@ Provide your response as SchemaCat:`;
       aiResponse: 'I apologize, but I encountered an error processing your request. Please try again.',
       note: `Error: ${error.message}`,
     };
-    
+
     res.status(200).json({
       success: true,
       data: response,

@@ -1,4 +1,4 @@
-# QueryPilot - Project Summary
+# SchemaCat - Project Summary
 
 ## ✅ Complete Implementation
 
@@ -66,7 +66,7 @@ postcss.config.js     - Tailwind + autoprefixer
 ### ✅ Pages Match Requirements
 
 **Landing Page (/)**
-- QueryPilot branding with database icon
+- SchemaCat branding with database icon
 - Feature bullet points with checkmarks
 - "Get Started" CTA → /login
 - "Powered by MongoDB & LLM Technology" footer

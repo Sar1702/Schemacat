@@ -65,7 +65,7 @@ const Signup = () => {
             Create Account
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Join QueryPilot today
+            Join SchemaCat today
           </p>
         </div>
 

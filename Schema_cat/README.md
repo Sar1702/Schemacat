@@ -1,4 +1,4 @@
-# QueryPilot - MongoDB Query Assistant
+# SchemaCat - MongoDB Query Assistant
 
 A production-ready React frontend application for a chat-based LLM assistant that helps with MongoDB queries. Built with React, React Router, and Tailwind CSS.
 

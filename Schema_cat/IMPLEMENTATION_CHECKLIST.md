@@ -1,4 +1,4 @@
-# ✅ QueryPilot - Implementation Checklist
+# ✅ SchemaCat - Implementation Checklist
 
 ## Technical Requirements
 
@@ -13,7 +13,7 @@
 ### Pages Implemented (7 Routes)
 
 #### 1. Landing Page (/)
-- [x] Product name: QueryPilot
+- [x] Product name: SchemaCat
 - [x] Subtitle: "Chat-based LLM Assistant for MongoDB Queries"
 - [x] Feature bullet points with checkmarks
 - [x] "Get Started" button → navigates to /login

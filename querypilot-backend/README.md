@@ -1,10 +1,10 @@
-# QueryPilot Backend
+# SchemaCat Backend
 
 A production-ready MongoDB developer tool backend built with the **MEN stack** (MongoDB, Express, Node.js).
 
 ## Project Overview
 
-QueryPilot is a backend API that allows developers to:
+SchemaCat is a backend API that allows developers to:
 - Register and authenticate using JWT
 - Securely connect their own MongoDB databases
 - Extract real-time database schema (collections, fields, indexes)
@@ -37,7 +37,7 @@ QueryPilot is a backend API that allows developers to:
 ## Folder Structure
 
 ```
-querypilot-backend/
+schemacat-backend/
 ├── src/
 │   ├── config/
 │   │   ├── env.js              # Environment configuration
@@ -92,8 +92,7 @@ querypilot-backend/
 1. **Clone or create the backend directory**
 
 ```bash
-mkdir querypilot-backend
-cd querypilot-backend
+cd schemacat-backend
 ```
 
 2. **Install dependencies**
@@ -117,7 +116,7 @@ NODE_ENV=development
 PORT=5000
 
 # MongoDB Core Database (for user accounts)
-MONGODB_CORE_URI=mongodb://localhost:27017/querypilot_core
+MONGODB_CORE_URI=mongodb://localhost:27017/schemacat_core
 
 # JWT Configuration
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -140,7 +139,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 |----------|-------------|---------|
 | `NODE_ENV` | Environment mode | `development` |
 | `PORT` | Server port | `5000` |
-| `MONGODB_CORE_URI` | MongoDB URI for user accounts | `mongodb://localhost:27017/querypilot_core` |
+| `MONGODB_CORE_URI` | MongoDB URI for user accounts | `mongodb://localhost:27017/schemacat_core` |
 | `JWT_SECRET` | Secret key for JWT signing | Change in production |
 | `JWT_EXPIRE` | JWT expiration time | `7d` |
 | `ENCRYPTION_KEY` | 32-character key for AES-256 encryption | Change in production |
@@ -176,7 +175,7 @@ GET /api/health
 ```json
 {
   "success": true,
-  "message": "QueryPilot API is running",
+  "message": "SchemaCat API is running",
   "timestamp": "2026-01-20T12:00:00.000Z"
 }
 ```
@@ -417,12 +416,12 @@ curl -X POST http://localhost:5000/api/chat \
 
 ### ⚠️ Important Security Notes
 
-1. **Read-Only MongoDB User**: When users connect their MongoDB databases to QueryPilot, they should use **read-only credentials**. This prevents accidental data modification.
+1. **Read-Only MongoDB User**: When users connect their MongoDB databases to SchemaCat, they should use **read-only credentials**. This prevents accidental data modification.
 
    Example MongoDB user creation:
    ```javascript
    db.createUser({
-     user: "querypilot_readonly",
+     user: "schemacat_readonly",
      pwd: "secure_password",
      roles: [{ role: "read", db: "your_database" }]
    })
@@ -440,7 +439,7 @@ curl -X POST http://localhost:5000/api/chat \
 
 ## Database Schema
 
-### Core Database: `querypilot_core`
+### Core Database: `schemacat_core`
 
 **Collection: `users`**
 

@@ -1,7 +1,7 @@
 {
-  "name": "querypilot-backend",
+  "name": "schemacat-backend",
   "version": "1.0.0",
-  "description": "QueryPilot - MongoDB Developer Tool Backend",
+  "description": "SchemaCat - MongoDB Developer Tool Backend",
   "main": "src/server.js",
   "type": "module",
   "scripts": {
@@ -12,12 +12,13 @@
     "mongodb",
     "express",
     "nodejs",
-    "querypilot"
+    "schemacat"
   ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.10",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -27,6 +28,7 @@
     "joi": "^17.12.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "openai": "^6.16.0"
   }
 }
